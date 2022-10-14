@@ -2,7 +2,8 @@ const { User } = require("../models");
 
 const userController = {
   getAllUsers(req, res) {
-    User.find({})
+    
+    User.find()
       .populate({
         path: "friends",
         select: "-__v",
@@ -51,7 +52,7 @@ const userController = {
       .catch((err) => res.json(err));
   },
 
-  // delete pizza
+ 
   deleteUser({ params }, res) {
     User.findOneAndDelete({ _id: params.id })
       .then((dbUserData) => res.json(dbUserData))
@@ -60,8 +61,8 @@ const userController = {
 
   addFriend({ params }, res) {
     User.findOneAndUpdate(
-      { _id: params.id },
-      { $addToSet: { friends: params.friendsId } },
+      { _id: params.userId },
+      { $addToSet: { friends: params.friendId } },
       { new: true }
     )
       .then((dbUserData) => res.json(dbUserData))
@@ -70,8 +71,8 @@ const userController = {
 
   removeFriend({ params }, res) {
     User.findOneAndUpdate(
-      { _id: params.id },
-      { $pull: { friends: params.friendsId } },
+      { _id: params.userId },
+      { $pull: { friends: params.friendId } },
       { new: true }
     )
       .then((dbUserData) => {
